@@ -11,7 +11,7 @@ export default async function Home() {
       <div>
         <div>
           {musics.map((m, i) => (
-            <div key={i} className="flex flex-row p-8 gap-8 overflow-x-scroll">
+            <div key={i} className="flex flex-row p-8 gap-8 overflow-x-scroll justify-center">
               {m.map((m, j) => (
                 <MusicCard key={j} {...m} />
               ))}

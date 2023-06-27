@@ -15,7 +15,7 @@ export const BottomNavigator: NavigationItemParent = ({ items }) => {
       <div className="flex justify-between w-full p-4 shadow-lg">
         {items.map((props, i) => (
           <div
-            className="flex-auto text-secondary-foreground hover:brightness-75"
+            className="flex-auto text-secondary-foreground hover:dimmed"
             key={i}
           >
             <BottomNavigatorItem {...props} />

@@ -14,7 +14,7 @@ const PlayerButton: React.FC<FontAwesomeIconProps> = (props) => (
   <FontAwesomeIcon
     {...props}
     width={24}
-    className={`hover:brightness-100 ${(props.className ?? "brightness-75")}`}
+    className={`hover:brightness-100 ${props.className ?? "dimmed"}`}
   />
 );
 

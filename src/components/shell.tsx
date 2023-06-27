@@ -1,11 +1,11 @@
-import React, { PropsWithChildren } from "react";
-import { NavigationItem } from ".";
-import { BottomNavigator } from "./bottom-nav";
-import { TopNavigator } from "./top-nav";
 import { faBook, faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { MusicPlayer } from "../player";
+import React, { PropsWithChildren } from "react";
+import { TopNavigator } from "./nav/top-nav";
+import { BottomNavigator } from "./nav/bottom-nav";
+import { MusicPlayer } from "./player/player";
+import { NavigationItem } from "./nav";
 
-export const WrapperNav: React.FC<PropsWithChildren> = ({ children }) => {
+export const AppShell: React.FC<PropsWithChildren> = ({ children }) => {
   const navigationItems: NavigationItem[] = [
     {
       name: "Inicio",

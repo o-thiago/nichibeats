@@ -2,7 +2,8 @@ import "../styles/globals.css";
 import "font-awesome/css/font-awesome.min.css";
 
 import { Inter } from "next/font/google";
-import { WrapperNav } from "@/components/ui/nav/wrapper-nav";
+import { TrpcProvider } from "@/utils/trpc-provider";
+import { AppShell } from "@/components/shell";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <WrapperNav>
-          <div className="min-h-screen">{children}</div>
-        </WrapperNav>
+        <TrpcProvider>
+          <AppShell>
+            <div className="min-h-screen">{children}</div>
+          </AppShell>
+        </TrpcProvider>
       </body>
     </html>
   );

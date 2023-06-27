@@ -3,7 +3,6 @@ import { appRouter } from "@/server/root";
 import { MusicRecommendation } from "@/server/routers/recommendations";
 import React from "react";
 
-
 export default async function Home() {
   const musics = await appRouter.createCaller({}).recommendations.get();
 

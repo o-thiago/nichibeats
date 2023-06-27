@@ -9,8 +9,8 @@ export const recommendationsRouter = createTRPCRouter({
   get: publicProcedure.query(() => {
     const musics: MusicRecommendation[] = [
       {
-        title: "OWO",
-        author: "GHA",
+        title: "The Empress",
+        author: "Undead Corporation Doujin Works",
       },
     ];
 

@@ -14,13 +14,17 @@
   --secondary: #000000;
   --secondary-foreground: #ffffff;
 
-  --backdrop: #121212;
+  --backdrop: #202020;
   --backdrop-foreground: #ffffff;
 }
 
 @layer utilities {
   .dimmed {
     @apply brightness-75;
+  }
+
+  .lighten {
+    @apply brightness-125;
   }
 }
 
@@ -37,27 +41,20 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-/* Track */
 ::-webkit-scrollbar {
   @apply w-[5px] h-[5px];
 }
 
-/* Handle */
+::-webkit-scrollbar-track {
+  @apply bg-[transparent];
+}
+
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#888];
+  @apply bg-[#555] rounded-lg;
 }
 
-/* Handle on hover */
+::-webkit-scrollbar-thumb:active {
+}
+
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-[#555];
-}
-
-/* Track */
-::-webkit-scro5llbar-track {
-  @apply bg-transparent;
-}
-
-/* Track on hover */
-::-webkit-scrollbar-track:hover {
-  @apply bg-transparent;
 }

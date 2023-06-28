@@ -1,9 +1,15 @@
 import React from "react";
-import { NavigationItemComponent, NavigationItemParent } from ".";
+import {
+  NavigationItemComponent,
+  NavigationItemParent,
+  NavigationItemWrapper,
+} from ".";
 
-export const TopNavigatorItem: NavigationItemComponent = ({ name }) => (
-  <div>{name}</div>
-);
+export const TopNavigatorItem: NavigationItemComponent = (props) => {
+  const { name } = props;
+
+  return <NavigationItemWrapper {...props}>{name}</NavigationItemWrapper>;
+};
 
 export const TopNavigator: NavigationItemParent = ({ items }) => (
   <nav className="bg-secondary text-secondary-foreground fixed top-0 left-0 w-full hidden md:block z-50">

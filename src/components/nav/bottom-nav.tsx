@@ -1,13 +1,22 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { NavigationItemComponent, NavigationItemParent } from ".";
+import {
+  NavigationItemComponent,
+  NavigationItemParent,
+  NavigationItemWrapper,
+} from ".";
 
-const BottomNavigatorItem: NavigationItemComponent = ({ icon, name }) => (
-  <div className="flex flex-col justify-center items-center gap-2">
-    <FontAwesomeIcon icon={icon} width={20} />
-    <span>{name}</span>
-  </div>
-);
+const BottomNavigatorItem: NavigationItemComponent = (props) => {
+  const { name, icon } = props;
+  return (
+    <NavigationItemWrapper {...props}>
+      <div className="flex flex-col justify-center items-center gap-2">
+        <FontAwesomeIcon icon={icon} width={20} />
+        <span>{name}</span>
+      </div>
+    </NavigationItemWrapper>
+  );
+};
 
 export const BottomNavigator: NavigationItemParent = ({ items }) => {
   return (

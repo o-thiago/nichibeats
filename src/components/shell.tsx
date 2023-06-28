@@ -10,21 +10,24 @@ export const AppShell: React.FC<PropsWithChildren> = ({ children }) => {
     {
       name: "Inicio",
       icon: faHome,
+      href: "/",
     },
     {
       name: "Busca",
       icon: faSearch,
+      href: "/",
     },
     {
       name: "Biblioteca",
       icon: faBook,
+      href: "/library",
     },
   ];
 
   return (
     <>
       <TopNavigator items={navigationItems} />
-      <div className="md:mt-24 mb-48 md:mb-12">
+      <div className="md:mt-24 mt-8 mb-40 md:mb-24">
         {/* Margin from fixed nav bar when > md */}
         <div>{children}</div>
       </div>

@@ -1,9 +1,11 @@
 import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import Link from "next/link";
+import React, { PropsWithChildren } from "react";
 
 export type NavigationItem = {
   icon: IconDefinition;
   name: string;
+  href: string;
 };
 
 export type NavigationItemParentProps = {
@@ -12,3 +14,7 @@ export type NavigationItemParentProps = {
 
 export type NavigationItemComponent = React.FC<NavigationItem>;
 export type NavigationItemParent = React.FC<NavigationItemParentProps>;
+
+export const NavigationItemWrapper: React.FC<
+  PropsWithChildren<NavigationItem>
+> = ({ children, href }) => <Link href={href}>{children}</Link>;

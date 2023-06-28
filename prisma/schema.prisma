@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// A content creator is data that refers to either a user or a artist
+model ContentCreator {
+    id          String @id @default(cuid())
+    displayName String
+
+    playlist Playlist[]
+
+    artist Artist?
+    user   User?
+}
+
+model Artist {
+    id String @id @default(cuid())
+
+    information   ContentCreator @relation(fields: [informationId], references: [id])
+    informationId String         @unique
+
+    musics Song[]
+
+    user   User?   @relation(fields: [userId], references: [id])
+    userId String? @unique
+
+    followers User[] @relation("FollowArtists")
+}
+
+model User {
+    id       String @id @default(cuid())
+    username String
+    email    String
+    password String
+
+    artist Artist?
+
+    contentCreatorId String         @unique
+    contentCreatror  ContentCreator @relation(fields: [contentCreatorId], references: [id])
+
+    followers User[] @relation("FollowUsers")
+
+    followingUsers   User[]   @relation("FollowUsers")
+    followingArtists Artist[] @relation("FollowArtists")
+}
+
+enum PrivacyStatus {
+    PRIVATE
+    PUBLIC
+}
+
+model Song {
+    id     String        @id @default(cuid())
+    title  String
+    status PrivacyStatus
+
+    artist   Artist @relation(fields: [artistId], references: [id])
+    artistId String
+
+    playlist Playlist[]
+}
+
+model Playlist {
+    id     Int           @id @default(autoincrement())
+    name   String
+    status PrivacyStatus
+
+    songs Song[]
+
+    contentCreator   ContentCreator? @relation(fields: [contentCreatorId], references: [id])
+    contentCreatorId String?
+}

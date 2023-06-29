@@ -13,6 +13,9 @@ import { faCirclePause, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MouseEventHandler } from "react";
 
+const audioFileMatchesID = (file: FileSystemFileHandle, id: string) =>
+  file.name == id;
+
 export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   id,
   type,
@@ -29,7 +32,7 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
     const dir = await storage.getDirectoryHandle(NichiFolder.Songs);
     const file = await dir.getFileHandle(id);
 
-    if (audioFile && audioFile.name == file.name) {
+    if (audioFile && audioFileMatchesID(audioFile, id)) {
       audioSwitcher();
     } else {
       setAudioFile(file);
@@ -39,7 +42,11 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   return (
     <button onClick={handleClick}>
       <FontAwesomeIcon
-        icon={audioState == "running" && audioFile?.name == id ? faCirclePause : faCirclePlay}
+        icon={
+          audioState == "running" && audioFile && audioFileMatchesID(audioFile, id)
+            ? faCirclePause
+            : faCirclePlay
+        }
         width={32}
         size="2x"
         className="drop-shadow-lg stroke-black stroke-2"

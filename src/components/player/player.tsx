@@ -11,10 +11,11 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
-import React, { ButtonHTMLAttributes } from "react";
+import React, { ButtonHTMLAttributes, useEffect, useState } from "react";
 import {
   AudioAccess,
   useAudioContext,
+  useAudioElement,
   useAudioSwitcher,
 } from "@/context/audio-context";
 
@@ -38,22 +39,41 @@ const PlayerButton: React.FC<PlayerButtonProps> = ({
 );
 
 export const MusicPlayer = () => {
+  const [audioElement] = useAudioElement(AudioAccess.Music);
   const [audioContext] = useAudioContext(AudioAccess.Music);
   const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 
+  const [percentComplete, setPercentComplete] = useState(0);
+
+  useEffect(() => {
+    audioElement?.addEventListener("timeupdate", () => {
+      const { currentTime, duration } = audioElement;
+      const newPercentComplete = currentTime / duration;
+      setPercentComplete(newPercentComplete * 100);
+    });
+  }, [audioElement]);
+
   return (
-    <div className="flex bg-backdrop text-backdrop-foreground p-4 items-center justify-center gap-4">
-      <PlayerButton iconProps={{ icon: faBackward }} />
-      <PlayerButton
-        iconProps={{
-          icon: audioContext?.state == "running" ? faPause : faPlay,
-          className: "brightness-100 hover:scale-110",
-        }}
-        buttonProps={{
-          onClick: audioSwitcher,
-        }}
-      />
-      <PlayerButton iconProps={{ icon: faForward }} />
+    <div className="bg-backdrop text-backdrop-foreground">
+      <div className="bg-backdrop dimmed p-1">
+        <div
+          style={{ width: `${percentComplete}%` }}
+          className="bg-primary p-1"
+        ></div>
+      </div>
+      <div className="flex p-2 items-center justify-center gap-4">
+        <PlayerButton iconProps={{ icon: faBackward }} />
+        <PlayerButton
+          iconProps={{
+            icon: audioContext?.state == "running" ? faPause : faPlay,
+            className: "brightness-100 hover:scale-110",
+          }}
+          buttonProps={{
+            onClick: audioSwitcher,
+          }}
+        />
+        <PlayerButton iconProps={{ icon: faForward }} />
+      </div>
     </div>
   );
 };

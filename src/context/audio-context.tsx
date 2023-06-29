@@ -19,7 +19,7 @@ class FullAudioContext {
   audioState = useState<AudioContextState | null>(null);
 }
 
-export enum AudioAccess {
+enum AudioAccess {
   Music = "music",
 }
 
@@ -60,9 +60,8 @@ const useAudioElement = (key: AudioAccess) =>
 
 const useAudioState = (key: AudioAccess) => useFullAudioContext(key).audioState;
 
-function useAudioContext(key: AudioAccess) {
-  return useFullAudioContext(key).audioContext;
-}
+const useAudioContext = (key: AudioAccess) =>
+  useFullAudioContext(key).audioContext;
 
 const useAudioSwitcher = (key: AudioAccess) => {
   const [audioContext] = useAudioContext(key);
@@ -147,6 +146,7 @@ export {
   useFullAudioContext,
   useAudioState,
   useAudioSwitcher,
+  AudioAccess,
 };
 
 export type { AudioContextProps };

@@ -1,14 +1,16 @@
 "use client";
 
 import React, {
-  Dispatch,
   PropsWithChildren,
-  SetStateAction,
-  createContext,
-  useContext,
+  useCallback,
   useEffect,
   useState,
 } from "react";
+import {
+  ContextStore,
+  MapContextProvider,
+  useContextWithKey,
+} from "./map-context";
 
 const getAudioControl = async (
   audioContext: AudioContext,
@@ -38,72 +40,100 @@ const getAudioControl = async (
   });
 };
 
-export type ContextValue<T> = [
-  T | undefined,
-  Dispatch<SetStateAction<T | undefined>>
-];
+class FullAudioContext {
+  audioBuffer = useState<AudioBufferSourceNode | null>(null);
+  audioContext = useState<AudioContext | null>(null);
+  audioFile = useState<FileSystemFileHandle | null>(null);
+  audioState = useState<AudioContextState | null>(null!);
+}
 
-const AudioBufferContext = createContext<
-  ContextValue<AudioBufferSourceNode | undefined>
->([null!, null!]);
+export enum AudioAccess {
+  Music = "music",
+}
 
-export const AudioBufferProvider: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [audio, setAudio] = useState<AudioBufferSourceNode | undefined>();
+const audioContextStore: ContextStore<AudioAccess, FullAudioContext> =
+  new Map();
+
+const useFullAudioContext = (key: AudioAccess) =>
+  useContextWithKey(audioContextStore, key);
+
+const AudioContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
+  const contextKeys = Object.values(AudioAccess);
 
   return (
-    <AudioBufferContext.Provider value={[audio, setAudio]}>
-      {children}
-    </AudioBufferContext.Provider>
+    <MapContextProvider
+      contextStore={audioContextStore}
+      contextKeys={contextKeys}
+      contextCreator={() => new FullAudioContext()}
+    >
+      {contextKeys.map((key) => {
+        return (
+          <AudioController key={key} access={key}>
+            {children}
+          </AudioController>
+        );
+      })}
+    </MapContextProvider>
   );
 };
 
-const AudioFileContext = createContext<ContextValue<FileSystemFileHandle>>([
-  null!,
-  null!,
-]);
-
-export const AudioFileProvider: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [audioFile, setAudioFile] = useState<
-    FileSystemFileHandle | undefined
-  >();
-
-  return (
-    <AudioFileContext.Provider value={[audioFile, setAudioFile]}>
-      {children}
-    </AudioFileContext.Provider>
-  );
+type AudioContextProps = {
+  access: AudioAccess;
 };
 
-export const AudioManagerContext = createContext<ContextValue<AudioContext>>(
-  null!
-);
+const useAudioFile = (key: AudioAccess) => useFullAudioContext(key).audioFile;
 
-export const AudioManagerProvider: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [audioContext, setAudioContext] = useState<AudioContext | undefined>();
+const useAudioBuffer = (key: AudioAccess) =>
+  useFullAudioContext(key).audioBuffer;
 
-  return (
-    <AudioManagerContext.Provider value={[audioContext, setAudioContext]}>
-      {children}
-    </AudioManagerContext.Provider>
-  );
+const useAudioState = (key: AudioAccess) => useFullAudioContext(key).audioState;
+
+function useAudioContext(key: AudioAccess) {
+  return useFullAudioContext(key).audioContext;
+}
+
+const useAudioSwitcher = (key: AudioAccess) => {
+  const [audioContext] = useAudioContext(key);
+
+  return useCallback(() => {
+    if (!audioContext) return;
+
+    if (audioContext.state == "running") {
+      audioContext.suspend();
+    } else {
+      audioContext?.resume();
+    }
+  }, [audioContext]);
 };
 
-export const AudioAutomation: React.FC<PropsWithChildren> = ({ children }) => {
-  const [audioContext, setAudioContext] = useAudioContext();
-  const [audioBuffer, setAudioBuffer] = useAudioBuffer();
-  const [audioFile] = useAudioFile();
+const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
+  access,
+  children,
+}) => {
+  const [audioContext, setAudioContext] = useAudioContext(access);
+  const [audioFile] = useAudioFile(access);
+  const [audioBuffer, setAudioBuffer] = useAudioBuffer(access);
+  const [, setAudioState] = useAudioState(access);
 
   useEffect(() => {
-    if (!audioContext && audioFile) {
-      setAudioContext(new AudioContext());
+    if (audioFile && !audioContext) {
+      const audioContext = new AudioContext();
+
+      setAudioContext(audioContext);
+      setAudioState(audioContext.state);
     }
-  }, [audioFile, audioContext, setAudioContext]);
+  }, [audioContext, audioFile, setAudioContext]);
+
+  useEffect(() => {
+    if (!audioContext) return;
+
+    audioContext.onstatechange = () => {
+      // Although we can directly access the state through the audioContext's
+      // state, we also expose the audio state through here, for easy of use
+      // and to also force a component update on the consumers whenever the state is changed
+      setAudioState(audioContext.state);
+    };
+  }, [audioContext, setAudioState]);
 
   useEffect(() => {
     if (!audioFile || !audioContext) return;
@@ -113,7 +143,7 @@ export const AudioAutomation: React.FC<PropsWithChildren> = ({ children }) => {
 
       setAudioBuffer(audioBuffer);
     })();
-  }, [audioFile, setAudioBuffer, audioContext]);
+  }, [audioFile, audioContext, setAudioBuffer]);
 
   useEffect(() => {
     audioBuffer?.start();
@@ -126,6 +156,16 @@ export const AudioAutomation: React.FC<PropsWithChildren> = ({ children }) => {
   return children;
 };
 
-export const useAudioContext = () => useContext(AudioManagerContext);
-export const useAudioBuffer = () => useContext(AudioBufferContext);
-export const useAudioFile = () => useContext(AudioFileContext);
+export {
+  AudioContextProvider,
+  audioContextStore,
+  AudioController,
+  useAudioContext,
+  useAudioFile,
+  useAudioBuffer,
+  useFullAudioContext,
+  useAudioState,
+  useAudioSwitcher,
+};
+
+export type { AudioContextProps };

@@ -12,7 +12,11 @@ import {
   FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
 import React, { ButtonHTMLAttributes } from "react";
-import { useAudioContext } from "@/context/audio-context";
+import {
+  AudioAccess,
+  useAudioContext,
+  useAudioSwitcher,
+} from "@/context/audio-context";
 
 type PlayerButtonProps = {
   buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
@@ -34,7 +38,8 @@ const PlayerButton: React.FC<PlayerButtonProps> = ({
 );
 
 export const MusicPlayer = () => {
-  const [audioContext] = useAudioContext();
+  const [audioContext] = useAudioContext(AudioAccess.Music);
+  const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 
   return (
     <div className="flex bg-backdrop text-backdrop-foreground p-4 items-center justify-center gap-4">
@@ -45,13 +50,7 @@ export const MusicPlayer = () => {
           className: "brightness-100 hover:scale-110",
         }}
         buttonProps={{
-          onClick: () => {
-            if (audioContext?.state == "running") {
-              audioContext?.suspend();
-            } else {
-              audioContext?.resume();
-            }
-          },
+          onClick: audioSwitcher,
         }}
       />
       <PlayerButton iconProps={{ icon: faForward }} />

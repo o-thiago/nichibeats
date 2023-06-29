@@ -5,10 +5,7 @@ import { Inter } from "next/font/google";
 import { TrpcProvider } from "@/shared/trpc/trpc-provider";
 import { AppShell } from "@/components/shell";
 import {
-  AudioAutomation,
-  AudioBufferProvider,
-  AudioFileProvider,
-  AudioManagerProvider,
+  AudioContextProvider,
 } from "@/context/audio-context";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,17 +24,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <TrpcProvider>
-          <AudioManagerProvider>
-            <AudioBufferProvider>
-              <AudioFileProvider>
-                <AudioAutomation>
-                  <AppShell>
-                    <div className="min-h-[80vh]">{children}</div>
-                  </AppShell>
-                </AudioAutomation>
-              </AudioFileProvider>
-            </AudioBufferProvider>
-          </AudioManagerProvider>
+          <AudioContextProvider>
+            <AppShell>
+              <div className="min-h-[80vh]">{children}</div>
+            </AppShell>
+          </AudioContextProvider>
         </TrpcProvider>
       </body>
     </html>

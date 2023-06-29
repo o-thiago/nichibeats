@@ -44,9 +44,8 @@ export const LocalMusics = () => {
   }, [storage, localMusics]);
 
   if (storage && localMusics.length <= 0) {
-      return <div>Loading...</div>
+    return <div></div>;
   }
-
 
   return <MusicRow musics={localMusics} />;
 };

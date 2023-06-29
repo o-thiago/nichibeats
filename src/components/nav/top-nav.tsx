@@ -12,7 +12,7 @@ export const TopNavigatorItem: NavigationItemComponent = (props) => {
 };
 
 export const TopNavigator: NavigationItemParent = ({ items }) => (
-  <nav className="bg-secondary text-secondary-foreground fixed top-0 left-0 w-full hidden md:block z-50">
+  <nav className="bg-base-200 text-base-content fixed top-0 left-0 w-full hidden md:block z-50">
     <div className="flex flex-row p-6 h-16 gap-8">
       {items.map((props, i) => (
         <div key={i} className="hover:dimmed">

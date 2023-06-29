@@ -2,7 +2,7 @@ import { faBook, faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import React, { PropsWithChildren } from "react";
 import { TopNavigator } from "./nav/top-nav";
 import { BottomNavigator } from "./nav/bottom-nav";
-import { MusicPlayer } from "./player/player";
+import { MusicBottomPlayer } from "./player/bottom-player";
 import { NavigationItem } from "./nav";
 
 export const AppShell: React.FC<PropsWithChildren> = ({ children }) => {
@@ -32,7 +32,7 @@ export const AppShell: React.FC<PropsWithChildren> = ({ children }) => {
         <div>{children}</div>
       </div>
       <div className="fixed bottom-0 left-0 w-full z-50">
-        <MusicPlayer />
+        <MusicBottomPlayer />
         <BottomNavigator items={navigationItems} />
       </div>
     </>

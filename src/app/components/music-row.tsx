@@ -1,4 +1,4 @@
-import { MusicCard } from "@/components/player/music-card";
+import { MusicDisplay} from "@/components/player/music-display";
 import { MusicRecommendation } from "@/server/routers/recommendations";
 import React from "react";
 
@@ -10,7 +10,7 @@ export const MusicRow: React.FC<MusicRowProps> = ({ musics }) => {
   return (
     <div className="flex flex-row p-8 overflow-x-auto overflow-x-scroll justify-start">
       {musics.map((m, i) => (
-        <MusicCard key={i} {...m} />
+        <MusicDisplay key={i} {...m} />
       ))}
     </div>
   );

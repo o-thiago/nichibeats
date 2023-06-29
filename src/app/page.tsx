@@ -13,7 +13,7 @@ export default async function Home() {
   return (
     <main>
       <div className="animate__animated animate__fadeIn">
-          <LocalMusics />
+        <LocalMusics />
         {recommended_music.map((musics, i) => (
           <MusicRow key={i} musics={musics} />
         ))}

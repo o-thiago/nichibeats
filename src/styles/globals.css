@@ -2,24 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-
-  --background-start-rgb: 0, 0, 0;
-  --background-end-rgb: 25, 25, 25;
-
-  --primary: 255 192 200;
-  --primary-foreground: 255 255 255;
-
-  --primary-vibrant: 255 150 150;
-
-  --secondary: 0 0 0;
-  --secondary-foreground: 255 255 255;
-
-  --backdrop: 30 30 30;
-  --backdrop-foreground: 255 255 255;
-}
-
 @layer utilities {
   .dimmed {
     @apply brightness-75;
@@ -28,19 +10,6 @@
   .lighten {
     @apply brightness-125;
   }
-}
-
-@media (prefers-color-scheme: dark) {
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
 
 ::-webkit-scrollbar {
@@ -53,12 +22,6 @@ body {
 
 ::-webkit-scrollbar-thumb {
   @apply bg-[#555] rounded-lg;
-}
-
-::-webkit-scrollbar-thumb:active {
-}
-
-::-webkit-scrollbar-thumb:hover {
 }
 
 /* This makes the tap effect not have a blue thingy */

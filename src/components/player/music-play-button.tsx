@@ -2,8 +2,9 @@
 
 import {
   AudioAccess,
+  useAudioElement,
   useAudioFile,
-  useAudioState,
+  useAudioPlaying,
   useAudioSwitcher,
 } from "@/context/audio-context";
 import { NichiFolder, useNichiStorage } from "@/hooks/storage";
@@ -19,7 +20,7 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   id,
   type,
 }) => {
-  const [audioState] = useAudioState(AudioAccess.Music);
+  const [playing] = useAudioPlaying(AudioAccess.Music);
   const [audioFile, setAudioFile] = useAudioFile(AudioAccess.Music);
   const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 
@@ -39,19 +40,18 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   };
 
   return (
-    <button className="outline-none">
+    <button className="btn btn-primary btn-circle">
       <FontAwesomeIcon
         onClick={handleClick}
         icon={
-          audioState == "running" &&
+          playing &&
           audioFile &&
           audioFileMatchesID(audioFile, id)
             ? faCirclePause
             : faCirclePlay
         }
-        width={32}
-        size="2x"
-        className="ring-2 ring-primary-vibrant rounded-full"
+        size="3x"
+        className="text-primary-content"
       />
     </button>
   );

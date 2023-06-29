@@ -11,7 +11,7 @@ const BottomNavigatorItem: NavigationItemComponent = (props) => {
   return (
     <NavigationItemWrapper {...props}>
       <div className="flex flex-col justify-center items-center gap-2">
-        <FontAwesomeIcon icon={icon} width={20} />
+        <FontAwesomeIcon icon={icon} size="2x" />
         <span>{name}</span>
       </div>
     </NavigationItemWrapper>
@@ -20,7 +20,7 @@ const BottomNavigatorItem: NavigationItemComponent = (props) => {
 
 export const BottomNavigator: NavigationItemParent = ({ items }) => {
   return (
-    <div className="bg-secondary left-0 w-full md:hidden z-50">
+    <div className="bg-base-200 left-0 w-full md:hidden z-50">
       <div className="flex justify-between w-full p-4 shadow-lg">
         {items.map((props, i) => (
           <div

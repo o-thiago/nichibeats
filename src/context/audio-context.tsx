@@ -16,7 +16,7 @@ class FullAudioContext {
   audioElement = useState<HTMLAudioElement | null>(null);
   audioContext = useState<AudioContext | null>(null);
   audioFile = useState<FileSystemFileHandle | null>(null);
-  audioState = useState<AudioContextState | null>(null);
+  audioPlaying = useState(false);
 }
 
 enum AudioAccess {
@@ -58,37 +58,60 @@ const useAudioFile = (key: AudioAccess) => useFullAudioContext(key).audioFile;
 const useAudioElement = (key: AudioAccess) =>
   useFullAudioContext(key).audioElement;
 
-const useAudioState = (key: AudioAccess) => useFullAudioContext(key).audioState;
+const useAudioPlaying = (key: AudioAccess) =>
+  useFullAudioContext(key).audioPlaying;
 
 const useAudioContext = (key: AudioAccess) =>
   useFullAudioContext(key).audioContext;
 
 const useAudioSwitcher = (key: AudioAccess) => {
-  const [audioContext] = useAudioContext(key);
+  const [audioPlaying, setAudioPlaying] = useAudioPlaying(key);
 
   return useCallback(() => {
-    if (!audioContext) return;
-
-    if (audioContext.state == "running") {
-      audioContext.suspend();
-    } else {
-      audioContext.resume();
-    }
-  }, [audioContext]);
+    setAudioPlaying(!audioPlaying);
+  }, [audioPlaying, setAudioPlaying]);
 };
 
 const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
   access,
   children,
 }) => {
+  const [audioPlaying, setAudioPlaying] = useAudioPlaying(access);
   const [audioElement, setAudioElement] = useAudioElement(access);
   const [audioContext, setAudioContext] = useAudioContext(access);
   const [audioFile] = useAudioFile(access);
-  const [, setAudioState] = useAudioState(access);
 
   useEffect(() => {
-    setAudioElement(new Audio());
-  }, [setAudioElement]);
+    const audioElement = new Audio();
+
+    audioElement.onloadeddata = () => {
+      audioElement.play();
+    };
+
+    audioElement.onplay = () => {
+      setAudioPlaying(true);
+    };
+
+    audioElement.onpause = () => {
+      setAudioPlaying(false);
+    };
+
+    audioElement.onended = () => {
+      setAudioPlaying(false);
+    };
+
+    setAudioElement(audioElement);
+  }, [setAudioElement, setAudioPlaying]);
+
+  useEffect(() => {
+    if (!audioElement) return;
+
+    if (audioPlaying) {
+      audioElement.play();
+    } else {
+      audioElement.pause();
+    }
+  }, [audioPlaying, audioElement]);
 
   useEffect(() => {
     if (!audioContext || !audioElement) return;
@@ -104,20 +127,8 @@ const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
       const audioContext = new AudioContext();
 
       setAudioContext(audioContext);
-      setAudioState(audioContext.state);
     }
-  }, [audioContext, audioFile, setAudioContext, setAudioState]);
-
-  useEffect(() => {
-    if (!audioContext) return;
-
-    audioContext.onstatechange = () => {
-      // Although we can directly access the state through the audioContext's
-      // state, we also expose the audio state through here, for easy of use
-      // and to also force a component update on the consumers whenever the state is changed
-      setAudioState(audioContext.state);
-    };
-  }, [audioContext, setAudioState]);
+  }, [audioContext, audioFile, setAudioContext]);
 
   useEffect(() => {
     if (!audioFile || !audioElement) return;
@@ -126,12 +137,8 @@ const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
       const sysFile = await audioFile.getFile();
 
       audioElement.src = URL.createObjectURL(sysFile);
-
-      audioElement.onloadeddata = () => {
-        audioElement.play();
-      };
     })();
-  }, [audioFile, audioElement]);
+  }, [audioFile, audioElement, setAudioPlaying]);
 
   return children;
 };
@@ -144,7 +151,7 @@ export {
   useAudioFile,
   useAudioElement,
   useFullAudioContext,
-  useAudioState,
+  useAudioPlaying,
   useAudioSwitcher,
   AudioAccess,
 };

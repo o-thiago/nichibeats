@@ -11,7 +11,6 @@ import { MusicRecommendation } from "@/server/routers/recommendations";
 import { MusicType } from "@/shared/enum";
 import { faCirclePause, faCirclePlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { MouseEventHandler } from "react";
 
 const audioFileMatchesID = (file: FileSystemFileHandle, id: string) =>
   file.name == id;
@@ -26,7 +25,7 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
 
   const { storage } = useNichiStorage();
 
-  const handleClick: MouseEventHandler<HTMLButtonElement> = async () => {
+  const handleClick = async () => {
     if (type != MusicType.Local || !storage) return;
 
     const dir = await storage.getDirectoryHandle(NichiFolder.Songs);
@@ -40,16 +39,19 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   };
 
   return (
-    <button onClick={handleClick}>
+    <button className="outline-none">
       <FontAwesomeIcon
+        onClick={handleClick}
         icon={
-          audioState == "running" && audioFile && audioFileMatchesID(audioFile, id)
+          audioState == "running" &&
+          audioFile &&
+          audioFileMatchesID(audioFile, id)
             ? faCirclePause
             : faCirclePlay
         }
         width={32}
         size="2x"
-        className="drop-shadow-lg stroke-black stroke-2"
+        className="ring-2 ring-primary-vibrant rounded-full"
       />
     </button>
   );

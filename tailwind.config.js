@@ -1,3 +1,9 @@
+function rgb(varName) {
+  return () => {
+    return `rgb(var(--${varName}))`;
+  };
+}
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -9,16 +15,17 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "var(--primary)",
-          foreground: "var(--primary-foreground)",
+          DEFAULT: rgb("primary"),
+          vibrant: rgb("primary-vibrant"),
+          foreground: rgb("primary-foreground"),
         },
         secondary: {
-          DEFAULT: "var(--secondary)",
-          foreground: "var(--secondary-foreground)",
+          DEFAULT: rgb("secondary"),
+          foreground: rgb("secondary-foreground"),
         },
         backdrop: {
-          DEFAULT: "var(--backdrop)",
-          foreground: "var(--backdrop-foreground)",
+          DEFAULT: rgb("backdrop"),
+          foreground: rgb("backdrop-foreground"),
         },
       },
       backgroundImage: {

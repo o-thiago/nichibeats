@@ -38,11 +38,8 @@ const PlayerButton: React.FC<PlayerButtonProps> = ({
   </button>
 );
 
-export const MusicPlayer = () => {
+const MusicProgressDisplayer = () => {
   const [audioElement] = useAudioElement(AudioAccess.Music);
-  const [audioContext] = useAudioContext(AudioAccess.Music);
-  const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
-
   const [percentComplete, setPercentComplete] = useState(0);
 
   useEffect(() => {
@@ -54,13 +51,22 @@ export const MusicPlayer = () => {
   }, [audioElement]);
 
   return (
+    <div className="bg-backdrop dimmed p-1">
+      <div
+        style={{ width: `${percentComplete}%` }}
+        className="bg-primary p-1 rounded-lg"
+      />
+    </div>
+  );
+};
+
+export const MusicPlayer = () => {
+  const [audioContext] = useAudioContext(AudioAccess.Music);
+  const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
+
+  return (
     <div className="bg-backdrop text-backdrop-foreground">
-      <div className="bg-backdrop dimmed p-1">
-        <div
-          style={{ width: `${percentComplete}%` }}
-          className="bg-primary p-1"
-        ></div>
-      </div>
+      <MusicProgressDisplayer />
       <div className="flex p-2 items-center justify-center gap-4">
         <PlayerButton iconProps={{ icon: faBackward }} />
         <PlayerButton

@@ -8,14 +8,16 @@
   --background-start-rgb: 0, 0, 0;
   --background-end-rgb: 25, 25, 25;
 
-  --primary: pink;
-  --primary-foreground: #e7e5da;
+  --primary: 255 192 200;
+  --primary-foreground: 255 255 255;
 
-  --secondary: #000000;
-  --secondary-foreground: #ffffff;
+  --primary-vibrant: 255 150 150;
 
-  --backdrop: #202020;
-  --backdrop-foreground: #ffffff;
+  --secondary: 0 0 0;
+  --secondary-foreground: 255 255 255;
+
+  --backdrop: 30 30 30;
+  --backdrop-foreground: 255 255 255;
 }
 
 @layer utilities {
@@ -57,4 +59,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
+}
+
+/* This makes the tap effect not have a blue thingy */
+* {
+  -webkit-tap-highlight-color: transparent;
 }

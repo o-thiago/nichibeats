@@ -8,7 +8,7 @@ export const MusicCard: React.FC<MusicRecommendation> = (props) => {
   return (
     <div className="w-48 h-92 mr-8 bg-backdrop text-backdrop-foreground rounded-lg shadow-lg flex-shrink-0">
       <div className="gap-4 p-4 flex flex-col items-center hover:backdrop-brightness-125">
-        <div className="bg-white h-32 w-full rounded-lg flex text-primary justify-end items-end p-2 outline outline-2">
+        <div className="bg-white h-32 w-full rounded-lg flex text-primary justify-end items-end p-2">
           <MusicPlayButton {...props} />
         </div>
         <div className="h-16">

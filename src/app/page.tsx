@@ -1,5 +1,5 @@
 import { appRouter } from "@/server/root";
-import React from "react";
+import React, { Suspense } from "react";
 import { MusicRow } from "./components/music-row";
 import { LocalMusics } from "./components/local-musics";
 
@@ -12,10 +12,12 @@ export default async function Home() {
 
   return (
     <main>
-      <LocalMusics />
-      {recommended_music.map((musics, i) => (
-        <MusicRow key={i} musics={musics} />
-      ))}
+      <div className="animate__animated animate__fadeIn">
+          <LocalMusics />
+        {recommended_music.map((musics, i) => (
+          <MusicRow key={i} musics={musics} />
+        ))}
+      </div>
     </main>
   );
 }

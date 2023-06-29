@@ -12,39 +12,11 @@ import {
   useContextWithKey,
 } from "./map-context";
 
-const getAudioControl = async (
-  audioContext: AudioContext,
-  file: FileSystemFileHandle
-): Promise<AudioBufferSourceNode> => {
-  const reader = new FileReader();
-
-  return new Promise(async (res) => {
-    reader.onload = () => {
-      const buffer = reader.result;
-
-      if (buffer && typeof buffer == "object") {
-        audioContext.decodeAudioData(buffer, (decodedData) => {
-          const source = audioContext.createBufferSource();
-
-          source.buffer = decodedData;
-          source.connect(audioContext.destination);
-
-          res(source);
-        });
-      }
-    };
-
-    const blob = await file.getFile();
-
-    reader.readAsArrayBuffer(blob);
-  });
-};
-
 class FullAudioContext {
-  audioBuffer = useState<AudioBufferSourceNode | null>(null);
+  audioElement = useState<HTMLAudioElement | null>(null);
   audioContext = useState<AudioContext | null>(null);
   audioFile = useState<FileSystemFileHandle | null>(null);
-  audioState = useState<AudioContextState | null>(null!);
+  audioState = useState<AudioContextState | null>(null);
 }
 
 export enum AudioAccess {
@@ -83,8 +55,8 @@ type AudioContextProps = {
 
 const useAudioFile = (key: AudioAccess) => useFullAudioContext(key).audioFile;
 
-const useAudioBuffer = (key: AudioAccess) =>
-  useFullAudioContext(key).audioBuffer;
+const useAudioElement = (key: AudioAccess) =>
+  useFullAudioContext(key).audioElement;
 
 const useAudioState = (key: AudioAccess) => useFullAudioContext(key).audioState;
 
@@ -101,7 +73,7 @@ const useAudioSwitcher = (key: AudioAccess) => {
     if (audioContext.state == "running") {
       audioContext.suspend();
     } else {
-      audioContext?.resume();
+      audioContext.resume();
     }
   }, [audioContext]);
 };
@@ -110,10 +82,23 @@ const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
   access,
   children,
 }) => {
+  const [audioElement, setAudioElement] = useAudioElement(access);
   const [audioContext, setAudioContext] = useAudioContext(access);
   const [audioFile] = useAudioFile(access);
-  const [audioBuffer, setAudioBuffer] = useAudioBuffer(access);
   const [, setAudioState] = useAudioState(access);
+
+  useEffect(() => {
+    setAudioElement(new Audio());
+  }, [setAudioElement]);
+
+  useEffect(() => {
+    if (!audioContext || !audioElement) return;
+
+    const mediaElementSource =
+      audioContext.createMediaElementSource(audioElement);
+
+    mediaElementSource.connect(audioContext.destination);
+  }, [audioContext, audioElement]);
 
   useEffect(() => {
     if (audioFile && !audioContext) {
@@ -122,7 +107,7 @@ const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
       setAudioContext(audioContext);
       setAudioState(audioContext.state);
     }
-  }, [audioContext, audioFile, setAudioContext]);
+  }, [audioContext, audioFile, setAudioContext, setAudioState]);
 
   useEffect(() => {
     if (!audioContext) return;
@@ -136,22 +121,18 @@ const AudioController: React.FC<PropsWithChildren<AudioContextProps>> = ({
   }, [audioContext, setAudioState]);
 
   useEffect(() => {
-    if (!audioFile || !audioContext) return;
+    if (!audioFile || !audioElement) return;
 
     (async () => {
-      const audioBuffer = await getAudioControl(audioContext, audioFile);
+      const sysFile = await audioFile.getFile();
 
-      setAudioBuffer(audioBuffer);
+      audioElement.src = URL.createObjectURL(sysFile);
+
+      audioElement.onloadeddata = () => {
+        audioElement.play();
+      };
     })();
-  }, [audioFile, audioContext, setAudioBuffer]);
-
-  useEffect(() => {
-    audioBuffer?.start();
-
-    return () => {
-      audioBuffer?.stop();
-    };
-  }, [audioBuffer]);
+  }, [audioFile, audioElement]);
 
   return children;
 };
@@ -162,7 +143,7 @@ export {
   AudioController,
   useAudioContext,
   useAudioFile,
-  useAudioBuffer,
+  useAudioElement,
   useFullAudioContext,
   useAudioState,
   useAudioSwitcher,

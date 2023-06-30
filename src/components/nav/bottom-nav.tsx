@@ -11,7 +11,7 @@ const BottomNavigatorItem: NavigationItemComponent = (props) => {
   return (
     <NavigationItemWrapper {...props}>
       <div className="flex flex-col justify-center items-center gap-2">
-        <FontAwesomeIcon icon={icon} size="2x" />
+        <FontAwesomeIcon icon={icon} size="1x" />
         <span>{name}</span>
       </div>
     </NavigationItemWrapper>

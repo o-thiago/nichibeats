@@ -55,13 +55,15 @@ const MusicProgressDisplayer = () => {
     audioElement.currentTime = percentage * audioElement.duration;
   };
 
+  const progressStyle = "p-1 rounded-lg";
+
   return (
     <div className="p-1 flex flex-row" onClick={handleProgressBarClick}>
       <div
         style={{ width: `${percentComplete}%` }}
-        className="bg-primary p-1 rounded-lg transition-all duration-300"
+        className={`${progressStyle} bg-primary transition-all duration-300`}
       />
-      <div className="flex-grow bg-primary/20" />
+      <div className={`${progressStyle} flex-grow bg-primary/20`} />
     </div>
   );
 };
@@ -73,7 +75,7 @@ export const MusicBottomPlayer = () => {
   return (
     <div className="bg-base-200">
       <MusicProgressDisplayer />
-      <div className="flex p-2 items-center justify-center gap-2">
+      <div className="flex items-center justify-center">
         <PlayerButton icon={faBackward} />
         <PlayerButton
           icon={audioPlaying ? faPause : faPlay}

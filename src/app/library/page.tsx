@@ -1,10 +1,10 @@
-import { AddSongButton } from "./components/add-song";
+import { AddSongModal } from "./_components/add-song";
 
 export default function Library() {
   return (
     <main>
       <div className="flex justify-center items-center">
-        <AddSongButton />
+        <AddSongModal />
       </div>
     </main>
   );

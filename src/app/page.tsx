@@ -1,7 +1,7 @@
 import { appRouter } from "@/server/root";
 import React from "react";
-import { MusicRow } from "./components/music-row";
-import { LocalMusics } from "./components/local-musics";
+import { MusicRow } from "./_components/music-row";
+import { LocalMusics } from "./_components/local-musics";
 
 export const revalidate = Infinity;
 

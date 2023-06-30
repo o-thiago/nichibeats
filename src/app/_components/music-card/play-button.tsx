@@ -20,6 +20,7 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   type,
 }) => {
   const [playing] = useAudioPlaying(AudioAccess.Music);
+
   const [audioFile, setAudioFile] = useAudioFile(AudioAccess.Music);
   const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 

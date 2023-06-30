@@ -10,29 +10,17 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// A content creator is data that refers to either a user or a artist
-model ContentCreator {
-    id          String @id @default(cuid())
-    displayName String
-
-    playlist Playlist[]
-
-    artist Artist?
-    user   User?
-}
-
 model Artist {
-    id String @id @default(cuid())
-
-    information   ContentCreator @relation(fields: [informationId], references: [id])
-    informationId String         @unique
+    id   String @id @default(cuid())
+    name String
 
     musics Song[]
 
     user   User?   @relation(fields: [userId], references: [id])
     userId String? @unique
 
-    followers User[] @relation("FollowArtists")
+    followers User[]  @relation("FollowArtists")
+    albums    Album[]
 }
 
 model User {
@@ -41,15 +29,13 @@ model User {
     email    String
     password String
 
-    artist Artist?
-
-    contentCreatorId String         @unique
-    contentCreatror  ContentCreator @relation(fields: [contentCreatorId], references: [id])
-
-    followers User[] @relation("FollowUsers")
+    artist    Artist?
+    followers User[]  @relation("FollowUsers")
 
     followingUsers   User[]   @relation("FollowUsers")
     followingArtists Artist[] @relation("FollowArtists")
+
+    Playlist Playlist[]
 }
 
 enum PrivacyStatus {
@@ -61,20 +47,36 @@ model Song {
     id     String        @id @default(cuid())
     title  String
     status PrivacyStatus
+    cover String?
+    genre  String
 
     artist   Artist @relation(fields: [artistId], references: [id])
     artistId String
 
     playlist Playlist[]
+    albums   Album[]
+}
+
+model Album {
+    id     String        @id @default(cuid())
+    name   String
+    cover String
+    status PrivacyStatus
+
+
+    songs Song[]
+
+    artist   Artist @relation(fields: [artistId], references: [id])
+    artistId String
 }
 
 model Playlist {
-    id     Int           @id @default(autoincrement())
+    id     String        @id @default(cuid())
     name   String
     status PrivacyStatus
 
     songs Song[]
 
-    contentCreator   ContentCreator? @relation(fields: [contentCreatorId], references: [id])
-    contentCreatorId String?
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
 }

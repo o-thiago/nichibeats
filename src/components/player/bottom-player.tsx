@@ -71,7 +71,7 @@ export const BottomMusicPlayer = () => {
   const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 
   return (
-    <div className="bg-base-200">
+    <div className="bg-base-200 p-2">
       <MusicProgressDisplayer />
       <div className="flex items-center justify-center">
         <BottomMusicPlayerButton icon={faBackward} />

@@ -4,7 +4,6 @@ import { NichiFolder, useNichiStorage } from "@/hooks/storage";
 import { MusicRow } from "./music-row";
 import { useEffect, useState } from "react";
 import { MusicRecommendation } from "@/server/routers/recommendations";
-import all from "it-all";
 import { MusicType } from "@/shared/enum";
 
 export const LocalMusics = () => {
@@ -17,27 +16,41 @@ export const LocalMusics = () => {
     if (!storage || localMusics.length > 0) return;
 
     (async () => {
-      const songs = await storage.getDirectoryHandle(NichiFolder.Songs);
+      const dir = await storage.getDirectoryHandle(NichiFolder.Songs);
+      const songFiles = dir.values();
 
-      // @ts-ignore oh gosh why can't library creators do proper typing ffs.
-      const awaitableSongs: Promise<never[]> = all(songs);
+      const limitedSongFiles: FileSystemFileHandle[] = [];
 
-      const allSongs = await awaitableSongs;
+      while (true) {
+        const { value, done } = await songFiles.next();
 
-      setLocalMusics(
-        allSongs.map(([fileName]: [string]) => {
+        if (done) {
+          break;
+        }
+
+        if (value.kind == "file") {
+          limitedSongFiles.push(value);
+          if (limitedSongFiles.length == 5) {
+            break;
+          }
+        }
+      }
+
+      const recommendations: MusicRecommendation[] = limitedSongFiles.map(
+        (file) => {
           return {
-            id: fileName,
-            title: fileName,
+            id: file.name,
+            title: file.name,
             type: MusicType.Local,
+            genre: "Teste",
             artist: {
-              information: {
-                displayName: "Teste",
-              },
+              name: "Local",
             },
           };
-        })
+        }
       );
+
+      setLocalMusics(recommendations);
     })().catch(() => {
       console.log("No local songs");
     });

@@ -1,77 +1,37 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "../../../lib/prisma";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import _ from "underscore";
 import { MusicType } from "@/shared/enum";
+import { inferTransformedProcedureOutput } from "@trpc/server/shared";
 
-const musicRecommendation = Prisma.validator<Prisma.SongArgs>()({
-  select: {
-    id: true,
-    title: true,
-    artist: {
+export const recommendationsRouter = createTRPCRouter({
+  get: publicProcedure.query(async () => {
+    const fetched = await prisma.song.findMany({
+      take: 25,
       select: {
-        information: {
+        id: true,
+        title: true,
+        genre: true,
+        cover: true,
+        artist: {
           select: {
-            displayName: true,
+            name: true,
           },
         },
       },
-    },
-  },
-});
-
-export const recommendationsRouter = createTRPCRouter({
-  get: publicProcedure.query(async (): Promise<MusicRecommendation[][]> => {
-    const fetched = await prisma.song.findMany({
-      ...musicRecommendation,
-      take: 50,
     });
 
-    const results = fetched
-      .concat(
-        _.times(8, () => [
-          {
-            id: "O",
-            title: "The Empress",
-            artist: {
-              information: {
-                displayName: "Undead Corporation",
-              },
-            },
-          },
-          {
-            id: "1",
-            title: "From Under Cover (Caught Up In A Love Song)",
-            artist: {
-              information: {
-                displayName: "Foreground Eclipse",
-              },
-            },
-          },
-          {
-            id: "2",
-            title: "Circo Inhumanitas",
-            artist: {
-              information: {
-                displayName: "Cattle Decapitation",
-              },
-            },
-          },
-        ]).flat()
-      )
-      .flat();
-
-    return _.chain(results)
-      .map((value) => ({ ...value, type: MusicType.Server }))
-      .groupBy((result) => result.title)
+    return _.chain(fetched.flat())
+      .map((r) => ({
+        ...r,
+        type: MusicType.Server,
+      }))
+      .groupBy((r) => r.genre)
       .toArray()
       .value();
   }),
 });
 
-
-export type MusicRecommendation = Prisma.SongGetPayload<
-  typeof musicRecommendation
-> & {
-  type: MusicType;
-};
+export type MusicRecommendation = inferTransformedProcedureOutput<
+  (typeof recommendationsRouter)["get"]
+>[number][number];

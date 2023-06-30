@@ -27,11 +27,13 @@ const MusicProgressDisplayer = () => {
     audioElement?.addEventListener("timeupdate", () => {
       const { currentTime, duration } = audioElement;
       const newPercentComplete = currentTime / duration;
-      setPercentComplete(newPercentComplete * 100);
+      setPercentComplete(newPercentComplete);
     });
   }, [audioElement]);
 
-  const handleProgressBarClick: MouseEventHandler<HTMLDivElement> = (event) => {
+  const handleProgressBarClick: MouseEventHandler<HTMLProgressElement> = (
+    event
+  ) => {
     if (!audioElement || audioElement.paused) return;
 
     const progressBar = event.currentTarget;
@@ -46,13 +48,11 @@ const MusicProgressDisplayer = () => {
   };
 
   return (
-    <div className="p-1 flex flex-row" onClick={handleProgressBarClick}>
-      <div
-        style={{ width: `${percentComplete}%` }}
-        className={`p-1 rounded-lg bg-primary transition-all duration-300`}
-      />
-      <div className={`flex-grow bg-primary/20`} />
-    </div>
+    <progress
+      className="progress progress-primary w-full bg-primary/50 h-3"
+      value={percentComplete}
+      onClick={handleProgressBarClick}
+    />
   );
 };
 
@@ -71,13 +71,15 @@ export const BottomMusicPlayer = () => {
   const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 
   return (
-    <div className="bg-base-200 p-2">
-      <MusicProgressDisplayer />
+    <div className="bg-base-200 p-1">
+      <div className="w-full pb-4">
+        <MusicProgressDisplayer />
+      </div>
       <div className="flex items-center justify-center">
         <BottomMusicPlayerButton icon={faBackward} />
         <BottomMusicPlayerButton
           icon={audioPlaying ? faPause : faPlay}
-          className="brightness-100 hover:scale-110"
+          className="brightness-100 hover:scale-110 transition-all"
           onClick={audioSwitcher}
         />
         <BottomMusicPlayerButton icon={faForward} />

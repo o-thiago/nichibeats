@@ -34,7 +34,7 @@ const BottomNav: NavItemParent = ({ items }) => {
         <div key={i}>
           <Link href={href}>
             <div className="flex flex-col hover:dimmed">
-              <FontAwesomeIcon icon={icon} size="xs" />
+              <FontAwesomeIcon icon={icon} size="lg" />
               <span>{name}</span>
             </div>
           </Link>

@@ -24,6 +24,11 @@
   @apply bg-[#555] rounded-lg;
 }
 
+/* Smooth progress */
+::-webkit-progress-value {
+  @apply transition-all duration-100;
+}
+
 /* This makes the tap effect not have a blue thingy */
 * {
   -webkit-tap-highlight-color: transparent;

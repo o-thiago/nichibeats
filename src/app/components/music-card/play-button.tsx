@@ -2,7 +2,6 @@
 
 import {
   AudioAccess,
-  useAudioElement,
   useAudioFile,
   useAudioPlaying,
   useAudioSwitcher,
@@ -44,9 +43,7 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
       <FontAwesomeIcon
         onClick={handleClick}
         icon={
-          playing &&
-          audioFile &&
-          audioFileMatchesID(audioFile, id)
+          playing && audioFile && audioFileMatchesID(audioFile, id)
             ? faCirclePause
             : faCirclePlay
         }

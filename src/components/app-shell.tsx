@@ -1,9 +1,7 @@
 import { faBook, faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
 import React, { PropsWithChildren } from "react";
-import { TopNav } from "./nav/top-nav";
-import { BottomNav } from "./nav/bottom-nav";
 import { BottomMusicPlayer } from "./player/bottom-player";
-import { NavItem } from "./nav";
+import { NavItem, TopNav, BottomNav } from "./app-nav";
 
 export const AppShell: React.FC<PropsWithChildren> = ({ children }) => {
   const navigationItems: NavItem[] = [

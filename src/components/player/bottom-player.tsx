@@ -19,16 +19,6 @@ import {
   useAudioSwitcher,
 } from "@/context/audio-context";
 
-const PlayerButton: React.FC<FontAwesomeIconProps> = (props) => (
-  <button className="btn btn-ghost">
-    <FontAwesomeIcon
-      {...props}
-      size="2x"
-      className={`hover:brightness-100 ${props.className ?? "dimmed"}`}
-    />
-  </button>
-);
-
 const MusicProgressDisplayer = () => {
   const [audioElement] = useAudioElement(AudioAccess.Music);
   const [percentComplete, setPercentComplete] = useState(0);
@@ -55,20 +45,28 @@ const MusicProgressDisplayer = () => {
     audioElement.currentTime = percentage * audioElement.duration;
   };
 
-  const progressStyle = "p-1 rounded-lg";
-
   return (
     <div className="p-1 flex flex-row" onClick={handleProgressBarClick}>
       <div
         style={{ width: `${percentComplete}%` }}
-        className={`${progressStyle} bg-primary transition-all duration-300`}
+        className={`p-1 rounded-lg bg-primary transition-all duration-300`}
       />
-      <div className={`${progressStyle} flex-grow bg-primary/20`} />
+      <div className={`flex-grow bg-primary/20`} />
     </div>
   );
 };
 
-export const MusicBottomPlayer = () => {
+const BottomMusicPlayerButton: React.FC<FontAwesomeIconProps> = (props) => (
+  <button className="btn btn-ghost">
+    <FontAwesomeIcon
+      {...props}
+      size="2x"
+      className={`hover:brightness-100 ${props.className ?? "dimmed"}`}
+    />
+  </button>
+);
+
+export const BottomMusicPlayer = () => {
   const [audioPlaying] = useAudioPlaying(AudioAccess.Music);
   const audioSwitcher = useAudioSwitcher(AudioAccess.Music);
 
@@ -76,13 +74,13 @@ export const MusicBottomPlayer = () => {
     <div className="bg-base-200">
       <MusicProgressDisplayer />
       <div className="flex items-center justify-center">
-        <PlayerButton icon={faBackward} />
-        <PlayerButton
+        <BottomMusicPlayerButton icon={faBackward} />
+        <BottomMusicPlayerButton
           icon={audioPlaying ? faPause : faPlay}
           className="brightness-100 hover:scale-110"
           onClick={audioSwitcher}
         />
-        <PlayerButton icon={faForward} />
+        <BottomMusicPlayerButton icon={faForward} />
       </div>
     </div>
   );

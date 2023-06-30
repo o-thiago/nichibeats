@@ -1,8 +1,8 @@
 import { MusicRecommendation } from "@/server/routers/recommendations";
 import React from "react";
-import { MusicPlayButton } from "./music-play-button";
+import { MusicPlayButton } from "./play-button";
 
-export const MusicDisplay: React.FC<MusicRecommendation> = (props) => {
+export const MusicCard: React.FC<MusicRecommendation> = (props) => {
   const { artist, title } = props;
 
   return (

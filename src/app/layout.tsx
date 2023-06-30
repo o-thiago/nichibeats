@@ -4,7 +4,7 @@ import "font-awesome/css/font-awesome.min.css";
 
 import { Inter } from "next/font/google";
 import { TrpcProvider } from "@/shared/trpc/trpc-provider";
-import { AppShell } from "@/components/shell";
+import { AppShell } from "@/components/app-shell";
 import { AudioContextProvider } from "@/context/audio-context";
 
 const inter = Inter({ subsets: ["latin"] });

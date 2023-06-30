@@ -12,7 +12,6 @@ export const recommendationsRouter = createTRPCRouter({
         id: true,
         title: true,
         genre: true,
-        cover: true,
         artist: {
           select: {
             name: true,

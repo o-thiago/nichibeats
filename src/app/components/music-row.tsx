@@ -8,7 +8,7 @@ type MusicRowProps = {
 
 export const MusicRow: React.FC<MusicRowProps> = ({ musics }) => {
   return (
-    <div className="flex flex-row p-8 overflow-x-auto overflow-x-scroll justify-start gap-4">
+    <div className="flex flex-row overflow-x-auto overflow-x-scroll p-2 justify-start gap-8">
       {musics.map((m, i) => (
         <MusicCard key={i} {...m} />
       ))}

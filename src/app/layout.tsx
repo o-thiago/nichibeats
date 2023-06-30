@@ -1,5 +1,4 @@
 import "../styles/globals.css";
-import "animate.css";
 import "font-awesome/css/font-awesome.min.css";
 
 import { Inter } from "next/font/google";

@@ -39,8 +39,8 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
   };
 
   return (
-    <button className="btn btn-primary btn-circle">
-      <FontAwesomeIcon
+    <div className="btn btn-primary btn-circle rounded-full">
+      <FontAwesomeIcon 
         onClick={handleClick}
         icon={
           playing && audioFile && audioFileMatchesID(audioFile, id)
@@ -50,6 +50,6 @@ export const MusicPlayButton: React.FC<MusicRecommendation> = ({
         size="3x"
         className="text-primary-content"
       />
-    </button>
+    </div>
   );
 };

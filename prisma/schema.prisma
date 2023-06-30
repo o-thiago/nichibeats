@@ -47,7 +47,6 @@ model Song {
     id     String        @id @default(cuid())
     title  String
     status PrivacyStatus
-    cover String?
     genre  String
 
     artist   Artist @relation(fields: [artistId], references: [id])
@@ -60,9 +59,7 @@ model Song {
 model Album {
     id     String        @id @default(cuid())
     name   String
-    cover String
     status PrivacyStatus
-
 
     songs Song[]
 

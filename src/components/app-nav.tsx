@@ -19,9 +19,11 @@ const TopNav: NavItemParent = ({ items }) => (
   <nav className="navbar bg-base-200 hidden md:block">
     <div className="flex flex-row gap-2">
       {items.map(({ href, name }, i) => (
-        <div key={i} className="btn btn-ghost">
-          <Link href={href}>{name}</Link>
-        </div>
+        <Link key={i} href={href}>
+          <div key={i} className="btn btn-ghost">
+            {name}
+          </div>
+        </Link>
       ))}
     </div>
   </nav>
